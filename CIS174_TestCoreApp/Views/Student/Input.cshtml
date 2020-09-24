@@ -1,0 +1,26 @@
+﻿@model AccessLevel
+@{
+    ViewBag.Title = "Input Access Level";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Input</title>
+</head>
+<body>
+    <h1 class="text-center">Input your Access Level</h1>
+    <form asp-controller="Student" asp-action="Input" method="post" class="form-horizontal">
+        <div class="text-danger text-center" asp-validation-summary="All"></div>
+        <div class="row">
+            <label asp-for="Level" class="control-label col-md-4 text-lg-right text-md-left ml-md-5">Access Level:</label>
+            <input asp-for="Level" class="form-control col-md-3" />
+        </div>
+        <div class="col-md-12 text-center">
+            <submit-button>Go</submit-button>
+        </div>
+    </form>
+    @await Component.InvokeAsync("StatusButton")
+</body>
+</html>

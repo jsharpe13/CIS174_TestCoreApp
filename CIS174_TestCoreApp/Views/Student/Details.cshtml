@@ -1,0 +1,57 @@
+﻿@model List<Student>
+@{
+    ViewBag.Title = "Student Details";
+}
+<h1 class="text-center">Details</h1>
+<h2 class="text-center">Access Level: @ViewBag.Access</h2>
+
+@if (ViewBag.Access <= 2)
+{
+    <h3 class="text-center">You do not have sufficent access level to view this data.</h3>
+}
+else if (ViewBag.Access > 2 && ViewBag.Access < 8)
+{
+    <table class="table table-bordered table-striped">
+        <thread>
+            <tr>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Grade</th>
+            </tr>
+        </thread>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.LastName</td>
+                    <td>@student.FirstName</td>
+                    <td>Restricted</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3 class="text-center">Hello Admin</h3>
+    <table class="table table-bordered table-striped">
+        <thread>
+            <tr>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Grade</th>
+            </tr>
+        </thread>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.LastName</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.Grade</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

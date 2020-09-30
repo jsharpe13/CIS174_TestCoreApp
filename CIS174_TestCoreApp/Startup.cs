@@ -57,6 +57,21 @@ namespace CIS174_TestCoreApp
 
             app.UseEndpoints(endpoints =>
             {
+                //custom Attribute
+                endpoints.MapControllers();
+
+                //Admin custom rules
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller}/{action}/page{page}");
+
+                //Admin Default Route
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller=AdminHome}/{action=defaultRoute}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

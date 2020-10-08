@@ -1,0 +1,14 @@
+﻿@model SportCountry
+@{
+    ViewData["Title"] = "sportDetails";
+}
+<h1 class="text-center">Country Details</h1>
+<img src="~/Images/@Model.LogoImage" style="object-fit: cover" width="100%" display="block" />
+
+<h1 class="text-center">@Model.Name</h1>
+<h2 class="text-center">@Model.Game.Name</h2>
+<h2 class="text-center">@Model.SportType.Name - @Model.SportType.Category.Name</h2>
+<p class="text-center"><a asp-controller="Sports" asp-action="sportTest"
+       asp-route-activeGame="@ViewBag.ActiveGame"
+       asp-route-activeCategory="@ViewBag.ActiveCategory">Return to Home Page</a></p>
+

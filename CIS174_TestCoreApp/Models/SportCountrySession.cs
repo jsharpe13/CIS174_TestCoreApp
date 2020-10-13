@@ -26,7 +26,7 @@ namespace CIS174_TestCoreApp.Models
         }
         public List<SportCountry> GetMyCountries() =>
             session.GetObject<List<SportCountry>>(CountryKey) ?? new List<SportCountry>();
-        public int GetMyCountriesCount() => session.GetInt32(Countkey) ?? 0;
+        public int? GetMyCountriesCount() => session.GetInt32(Countkey) ?? 0;
 
 
 

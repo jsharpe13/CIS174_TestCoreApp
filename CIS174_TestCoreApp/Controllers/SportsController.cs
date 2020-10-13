@@ -22,6 +22,26 @@ namespace CIS174_TestCoreApp.Controllers
             session.SetActiveGame(activeGame);
             session.SetActiveCategory(activeCategory);
 
+
+
+            int? count = session.GetMyCountriesCount();
+            if(count == null)
+            {
+                var cookies = new SportCountryCookies(Request.Cookies);
+                int[] ids = cookies.GetMyTeamsIds();
+
+                List<SportCountry> mycountries = new List<SportCountry>();
+                if(ids.Length > 0)
+                {
+                    mycountries = context.SportCountries.Include(r => r.Game).Include(m => m.SportType)
+                        .Include(t => t.SportType.Category)
+                        .Where(t => ids.Contains(t.CountryId)).ToList();
+                }
+                session.SetMyCountries(mycountries);
+            }
+
+
+
             List<SportGame> Games = context.SportGames.ToList();
             List<SportCategory> Categories = context.SportCategories.ToList();
             Games.Insert(0, new SportGame { GameId = 5, Name = "All" });
@@ -92,6 +112,13 @@ namespace CIS174_TestCoreApp.Controllers
             {
                 countries.Add(country);
                 session.SetMyCountries(countries);
+
+
+                var cookies = new SportCountryCookies(Response.Cookies);
+                cookies.SetMyCountriesIds(countries);
+
+
+
                 TempData["message"] = $"{country.Name} added to your favorites";
             }
             else

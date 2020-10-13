@@ -44,6 +44,9 @@ namespace CIS174_TestCoreApp.Controllers
         public RedirectToActionResult delete()
         {
             var session = new SportCountrySession(HttpContext.Session);
+            var cookies = new SportCountryCookies(Response.Cookies);
+            cookies.RemoveMyCountriesIds();
+
             session.RemoveMyCountries();
 
             TempData["message"] = "Favorite Countries cleared";

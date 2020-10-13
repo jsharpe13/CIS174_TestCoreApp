@@ -1,0 +1,27 @@
+﻿@model List<SportCountry>
+@{
+    ViewData["Title"] = "sportFavoritesIndex";
+}
+<div id="main">
+    <div class="row">
+        @foreach (var country in @Model)
+        {
+            <div class="col-md-4">
+                <div class="img-thumbnail">
+                    <a asp-controller="sportFavorites" asp-action="sportFavoriteDetail" asp-route-id="@country.CountryId"><img src="~/Images/@country.LogoImage" style="object-fit: cover" width="100%" height="180" alt="@country.Name" title="@country.Name | @country.Game.Name | @country.SportType.Name-@country.SportType.Category.Name  " /></a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="col-md-12 text-center">
+    <a class="btn btn-primary" asp-controller="Sports" asp-action="sportTest"
+       asp-route-activeGame="@ViewBag.ActiveGame"
+       asp-route-activeCategory="@ViewBag.ActiveCategory">Return to Home Page</a>
+</div>
+<br />
+<div class="col-md-12 text-center">
+    <a class="btn btn-primary" asp-controller="SportFavorites" asp-action="delete"
+       asp-route-activeGame="@ViewBag.ActiveGame"
+       asp-route-activeCategory="@ViewBag.ActiveCategory">Delete All Favorites</a>
+</div>

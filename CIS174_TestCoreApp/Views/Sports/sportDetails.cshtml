@@ -8,7 +8,8 @@
 <h1 class="text-center">@Model.Name</h1>
 <h2 class="text-center">@Model.Game.Name</h2>
 <h2 class="text-center">@Model.SportType.Name - @Model.SportType.Category.Name</h2>
-<p class="text-center"><a asp-controller="Sports" asp-action="sportTest"
+<div class="col-md-12 text-center"><a class="btn btn-primary" asp-controller="Sports" asp-action="Add" asp-route-id="@Model.CountryId">Add To Favorites</a></div><br />
+<div class="col-md-12 text-center"><a class="btn btn-primary" asp-controller="Sports" asp-action="sportTest"
        asp-route-activeGame="@ViewBag.ActiveGame"
-       asp-route-activeCategory="@ViewBag.ActiveCategory">Return to Home Page</a></p>
-
+       asp-route-activeCategory="@ViewBag.ActiveCategory">Return to Home Page</a></div><br />
+<div class="col-md-12 text-center"><a class="btn btn-primary" asp-controller="SportFavorites" asp-action="sportFavoritesIndex">Go To Favorites</a></div>

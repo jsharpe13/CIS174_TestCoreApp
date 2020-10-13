@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "sportFavoriteDetail";
+}
+<h1 class="text-center">Country Details</h1>
+<img src="~/Images/@Model.LogoImage" style="object-fit: cover" width="100%" display="block" />
+
+<h1 class="text-center">@Model.Name</h1>
+<h2 class="text-center">@Model.Game.Name</h2>
+<h2 class="text-center">@Model.SportType.Name - @Model.SportType.Category.Name</h2>
+<div class="col-md-12 text-center">
+    <a class="btn btn-primary" asp-controller="Sports" asp-action="sportTest"
+       asp-route-activeGame="@ViewBag.ActiveGame"
+       asp-route-activeCategory="@ViewBag.ActiveCategory">Return to Home Page</a>
+</div>
+<br />
+<div class="col-md-12 text-center"><a class="btn btn-primary" asp-controller="SportFavorites" asp-action="sportFavoritesIndex">Back To Favorites</a></div>
+

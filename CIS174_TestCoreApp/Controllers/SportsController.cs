@@ -18,13 +18,17 @@ namespace CIS174_TestCoreApp.Controllers
         }
         public ViewResult sportTest(int activeGame = 5, int activeCategory = 3)
         {
+            var session = new SportCountrySession(HttpContext.Session);
+            session.SetActiveGame(activeGame);
+            session.SetActiveCategory(activeCategory);
+
             List<SportGame> Games = context.SportGames.ToList();
             List<SportCategory> Categories = context.SportCategories.ToList();
             Games.Insert(0, new SportGame { GameId = 5, Name = "All" });
             Categories.Insert(0, new SportCategory { CategoryId = 3, Name = "All" });
 
-            ViewBag.ActiveGame = activeGame;
-            ViewBag.ActiveCategory = activeCategory;
+            ViewBag.ActiveGame = session.GetActiveGame();
+            ViewBag.ActiveCategory = session.GetActiveCategory();
             ViewBag.Games = Games;
             ViewBag.Categories = Categories;
 
@@ -47,8 +51,12 @@ namespace CIS174_TestCoreApp.Controllers
 
         public ViewResult sportDetails(int id, int activeGame, int activeCategory)
         {
-            ViewBag.ActiveGame = activeGame;
-            ViewBag.ActiveCategory = activeCategory;
+            var session = new SportCountrySession(HttpContext.Session);
+
+            //ViewBag.ActiveGame = activeGame;
+            //ViewBag.ActiveCategory = activeCategory;
+            ViewBag.ActiveGame = session.GetActiveGame();
+            ViewBag.ActiveCategory = session.GetActiveCategory();
             SportCountry country = context.SportCountries.Find(id);
             SportGame game = context.SportGames.Find(country.GameId);
             country.Game = game;
@@ -57,6 +65,46 @@ namespace CIS174_TestCoreApp.Controllers
             type.Category = category;
             country.SportType = type;
             return View(country);
+        }
+
+        public RedirectToActionResult Add(int id)
+        {
+            var session = new SportCountrySession(HttpContext.Session);
+            var countries = session.GetMyCountries();
+            bool alreadyin = false;
+
+            SportCountry country = context.SportCountries.Find(id);
+            SportGame game = context.SportGames.Find(country.GameId);
+            country.Game = game;
+            SportType type = context.SportTypes.Find(country.SportTypeId);
+            SportCategory category = context.SportCategories.Find(type.CategoryId);
+            type.Category = category;
+            country.SportType = type;
+
+            foreach(var lc in countries)
+            {
+                if(lc.CountryId == id)
+                {
+                    alreadyin = true;
+                }
+            }
+            if (alreadyin == false)
+            {
+                countries.Add(country);
+                session.SetMyCountries(countries);
+                TempData["message"] = $"{country.Name} added to your favorites";
+            }
+            else
+            {
+                TempData["message"] = $"{country.Name} is already in your favorites";
+            }
+
+            return RedirectToAction("sportTest",
+                new
+                {
+                    activeGame = session.GetActiveGame(),
+                    activeCategory = session.GetActiveCategory()
+                });
         }
     }
 }

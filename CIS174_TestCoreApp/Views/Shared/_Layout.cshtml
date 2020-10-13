@@ -41,6 +41,12 @@
             </div>
         </nav>
     </header>
+    <header class="text-center text-white">
+        @if (TempData["message"] != null)
+        {
+            <h4 class="bg-success p-2">@TempData["message"]</h4>
+        }
+    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

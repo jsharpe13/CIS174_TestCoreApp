@@ -25,7 +25,17 @@ namespace CIS174_TestCoreApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            // must be called before AddControllerWithViews()
+            services.AddMemoryCache(); 
+            services.AddSession(options =>
+            {
+                //change idle timeout to 5 minutes - default is 20 minutes
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
+                options.Cookie.HttpOnly = false;     //default is true
+                options.Cookie.IsEssential = true;   //default is false
+            });
+
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddDbContext<StudentContext>(options => options.UseSqlServer(Configuration.GetConnectionString("StudentContext")));
 
             services.AddRouting(options =>
@@ -54,6 +64,9 @@ namespace CIS174_TestCoreApp
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //must be called before UseEndpoints()
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

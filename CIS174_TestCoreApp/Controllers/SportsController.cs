@@ -23,7 +23,7 @@ namespace CIS174_TestCoreApp.Controllers
             session.SetActiveCategory(activeCategory);
 
 
-
+            /*
             int? count = session.GetMyCountriesCount();
             if(count == null)
             {
@@ -39,6 +39,19 @@ namespace CIS174_TestCoreApp.Controllers
                 }
                 session.SetMyCountries(mycountries);
             }
+            */
+
+            var cookies = new SportCountryCookies(Request.Cookies);
+            int[] ids = cookies.GetMyTeamsIds();
+
+            List<SportCountry> mycountries = new List<SportCountry>();
+            if (ids.Length > 0)
+            {
+                mycountries = context.SportCountries.Include(r => r.Game).Include(m => m.SportType)
+                    .Include(t => t.SportType.Category)
+                    .Where(t => ids.Contains(t.CountryId)).ToList();
+            }
+            session.SetMyCountries(mycountries);
 
 
 

@@ -1,4 +1,4 @@
-﻿@model List<SportCountry>
+﻿@model SportsViewModel
 @{
     ViewData["Title"] = "sportTest";
 }
@@ -91,7 +91,7 @@
 <div id="main">
     <button class="openbtn" onclick="openNav()">Sidebar</button>
     <div class="row">
-        @foreach (var country in @Model)
+        @foreach (var country in @Model.sportCountry)
         {
             <div class="col-md-4">
                 <div class="img-thumbnail">

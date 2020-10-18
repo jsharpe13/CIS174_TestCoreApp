@@ -14,10 +14,17 @@ namespace CIS174_TestCoreApp.Models
 
         public DbSet<Student>Students { get; set; }
 
+
         public DbSet<SportGame> SportGames { get; set; }
         public DbSet<SportType> SportTypes { get; set; }
         public DbSet<SportCountry> SportCountries { get; set; }
         public DbSet<SportCategory> SportCategories { get; set; }
+
+
+        public DbSet<Ticketing> Ticketings { get; set; }
+        public DbSet<TicketingPointValue> TicketingPointValues { get; set; }
+        public DbSet<TicketingStatus> TicketingStatuses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -274,6 +281,57 @@ namespace CIS174_TestCoreApp.Models
                     GameId = 4,
                     SportTypeId = 8,
                     LogoImage = "portugalflag.png"
+                }
+            );
+
+            //Ticketing System
+            modelBuilder.Entity<TicketingPointValue>().HasData(
+                new TicketingPointValue { pointValueId = "one", Name = "1" , orderNum=1},
+                new TicketingPointValue { pointValueId = "two", Name = "2", orderNum = 2 },
+                new TicketingPointValue { pointValueId = "three", Name = "3", orderNum = 3},
+                new TicketingPointValue { pointValueId = "five", Name = "5", orderNum = 4},
+                new TicketingPointValue { pointValueId = "eight", Name = "8", orderNum = 5},
+                new TicketingPointValue { pointValueId = "thirteen", Name = "13", orderNum = 6},
+                new TicketingPointValue { pointValueId = "twenty-one", Name = "21", orderNum = 7}
+            );
+            modelBuilder.Entity<TicketingStatus>().HasData(
+                new TicketingStatus { StatusId="todo", Name="To Do"},
+                new TicketingStatus { StatusId = "progress", Name="In Progress"},
+                new TicketingStatus { StatusId= "quality", Name="Quality Assurance"},
+                new TicketingStatus { StatusId="done", Name="Done"}
+            );
+            modelBuilder.Entity<Ticketing>().HasData(
+                new Ticketing 
+                { 
+                    SprintNumberId=1,
+                    Name="File Switch",
+                    Description="Switch project files",
+                    pointValueId = "one",
+                    StatusId = "done"
+                },
+                new Ticketing
+                {
+                    SprintNumberId = 2,
+                    Name = "Look File Over",
+                    Description = "Look File over for errors",
+                    pointValueId = "three",
+                    StatusId = "quality"
+                },
+                new Ticketing
+                {
+                    SprintNumberId = 3,
+                    Name = "Swap Computer Systems",
+                    Description = "Switch to completely new Computer system",
+                    pointValueId = "eight",
+                    StatusId = "progress"
+                },
+                new Ticketing
+                {
+                    SprintNumberId = 4,
+                    Name = "Get Coffeee",
+                    Description = "get coffee for group",
+                    pointValueId = "one",
+                    StatusId = "done"
                 }
             );
         }

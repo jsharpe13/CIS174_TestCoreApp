@@ -70,6 +70,11 @@ namespace CIS174_TestCoreApp
 
             app.UseEndpoints(endpoints =>
             {
+                //sportsPage custom
+                endpoints.MapControllerRoute(
+                    name: "sportcustom",
+                    pattern: "{controller=Sports}/{action=sportTest}/game/{activeGame}/category/{activeCategory}");
+
                 //custom Attribute
                 endpoints.MapControllers();
 

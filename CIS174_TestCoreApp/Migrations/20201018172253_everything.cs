@@ -2,7 +2,7 @@
 
 namespace CIS174_TestCoreApp.Migrations
 {
-    public partial class sport : Migration
+    public partial class everything : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,6 +33,46 @@ namespace CIS174_TestCoreApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    StudentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Grade = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.StudentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TicketingPointValues",
+                columns: table => new
+                {
+                    pointValueId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    orderNum = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketingPointValues", x => x.pointValueId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TicketingStatuses",
+                columns: table => new
+                {
+                    StatusId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketingStatuses", x => x.StatusId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SportTypes",
                 columns: table => new
                 {
@@ -49,6 +89,34 @@ namespace CIS174_TestCoreApp.Migrations
                         column: x => x.CategoryId,
                         principalTable: "SportCategories",
                         principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ticketings",
+                columns: table => new
+                {
+                    SprintNumberId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    pointValueId = table.Column<string>(nullable: false),
+                    StatusId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ticketings", x => x.SprintNumberId);
+                    table.ForeignKey(
+                        name: "FK_Ticketings_TicketingStatuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "TicketingStatuses",
+                        principalColumn: "StatusId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ticketings_TicketingPointValues_pointValueId",
+                        column: x => x.pointValueId,
+                        principalTable: "TicketingPointValues",
+                        principalColumn: "pointValueId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -101,6 +169,43 @@ namespace CIS174_TestCoreApp.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Students",
+                columns: new[] { "StudentId", "FirstName", "Grade", "LastName" },
+                values: new object[,]
+                {
+                    { 4, "Nancy", "D", "Poole" },
+                    { 3, "Levi", "C", "Veinkmen" },
+                    { 5, "Rebecca", "F", "Swanson" },
+                    { 1, "Mark", "A", "Johnson" },
+                    { 2, "Sam", "B", "Samson" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TicketingPointValues",
+                columns: new[] { "pointValueId", "Name", "orderNum" },
+                values: new object[,]
+                {
+                    { "one", "1", 1 },
+                    { "two", "2", 2 },
+                    { "three", "3", 3 },
+                    { "five", "5", 4 },
+                    { "eight", "8", 5 },
+                    { "thirteen", "13", 6 },
+                    { "twenty-one", "21", 7 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TicketingStatuses",
+                columns: new[] { "StatusId", "Name" },
+                values: new object[,]
+                {
+                    { "quality", "Quality Assurance" },
+                    { "todo", "To Do" },
+                    { "progress", "In Progress" },
+                    { "done", "Done" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "SportTypes",
                 columns: new[] { "SportTypeId", "CategoryId", "Name" },
                 values: new object[,]
@@ -113,6 +218,17 @@ namespace CIS174_TestCoreApp.Migrations
                     { 4, 2, " Road Cycling" },
                     { 6, 2, "Canoe Sprint" },
                     { 8, 2, "Skateboarding" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ticketings",
+                columns: new[] { "SprintNumberId", "Description", "Name", "StatusId", "pointValueId" },
+                values: new object[,]
+                {
+                    { 3, "Switch to completely new Computer system", "Swap Computer Systems", "progress", "eight" },
+                    { 2, "Look File over for errors", "Look File Over", "quality", "three" },
+                    { 1, "Switch project files", "File Switch", "done", "one" },
+                    { 4, "get coffee for group", "Get Coffeee", "done", "one" }
                 });
 
             migrationBuilder.InsertData(
@@ -160,6 +276,16 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "IX_SportTypes_CategoryId",
                 table: "SportTypes",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticketings_StatusId",
+                table: "Ticketings",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticketings_pointValueId",
+                table: "Ticketings",
+                column: "pointValueId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -168,10 +294,22 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportCountries");
 
             migrationBuilder.DropTable(
+                name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Ticketings");
+
+            migrationBuilder.DropTable(
                 name: "SportGames");
 
             migrationBuilder.DropTable(
                 name: "SportTypes");
+
+            migrationBuilder.DropTable(
+                name: "TicketingStatuses");
+
+            migrationBuilder.DropTable(
+                name: "TicketingPointValues");
 
             migrationBuilder.DropTable(
                 name: "SportCategories");

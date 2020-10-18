@@ -432,6 +432,167 @@ namespace CIS174_TestCoreApp.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.Ticketing", b =>
+                {
+                    b.Property<int>("SprintNumberId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("pointValueId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("SprintNumberId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("pointValueId");
+
+                    b.ToTable("Ticketings");
+
+                    b.HasData(
+                        new
+                        {
+                            SprintNumberId = 1,
+                            Description = "Switch project files",
+                            Name = "File Switch",
+                            StatusId = "done",
+                            pointValueId = "one"
+                        },
+                        new
+                        {
+                            SprintNumberId = 2,
+                            Description = "Look File over for errors",
+                            Name = "Look File Over",
+                            StatusId = "quality",
+                            pointValueId = "three"
+                        },
+                        new
+                        {
+                            SprintNumberId = 3,
+                            Description = "Switch to completely new Computer system",
+                            Name = "Swap Computer Systems",
+                            StatusId = "progress",
+                            pointValueId = "eight"
+                        },
+                        new
+                        {
+                            SprintNumberId = 4,
+                            Description = "get coffee for group",
+                            Name = "Get Coffeee",
+                            StatusId = "done",
+                            pointValueId = "one"
+                        });
+                });
+
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.TicketingPointValue", b =>
+                {
+                    b.Property<string>("pointValueId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("orderNum")
+                        .HasColumnType("int");
+
+                    b.HasKey("pointValueId");
+
+                    b.ToTable("TicketingPointValues");
+
+                    b.HasData(
+                        new
+                        {
+                            pointValueId = "one",
+                            Name = "1",
+                            orderNum = 1
+                        },
+                        new
+                        {
+                            pointValueId = "two",
+                            Name = "2",
+                            orderNum = 2
+                        },
+                        new
+                        {
+                            pointValueId = "three",
+                            Name = "3",
+                            orderNum = 3
+                        },
+                        new
+                        {
+                            pointValueId = "five",
+                            Name = "5",
+                            orderNum = 4
+                        },
+                        new
+                        {
+                            pointValueId = "eight",
+                            Name = "8",
+                            orderNum = 5
+                        },
+                        new
+                        {
+                            pointValueId = "thirteen",
+                            Name = "13",
+                            orderNum = 6
+                        },
+                        new
+                        {
+                            pointValueId = "twenty-one",
+                            Name = "21",
+                            orderNum = 7
+                        });
+                });
+
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.TicketingStatus", b =>
+                {
+                    b.Property<string>("StatusId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StatusId");
+
+                    b.ToTable("TicketingStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            StatusId = "todo",
+                            Name = "To Do"
+                        },
+                        new
+                        {
+                            StatusId = "progress",
+                            Name = "In Progress"
+                        },
+                        new
+                        {
+                            StatusId = "quality",
+                            Name = "Quality Assurance"
+                        },
+                        new
+                        {
+                            StatusId = "done",
+                            Name = "Done"
+                        });
+                });
+
             modelBuilder.Entity("CIS174_TestCoreApp.Models.SportCountry", b =>
                 {
                     b.HasOne("CIS174_TestCoreApp.Models.SportGame", "Game")
@@ -452,6 +613,21 @@ namespace CIS174_TestCoreApp.Migrations
                     b.HasOne("CIS174_TestCoreApp.Models.SportCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.Ticketing", b =>
+                {
+                    b.HasOne("CIS174_TestCoreApp.Models.TicketingStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CIS174_TestCoreApp.Models.TicketingPointValue", "pointValue")
+                        .WithMany()
+                        .HasForeignKey("pointValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

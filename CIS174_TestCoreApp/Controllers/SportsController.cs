@@ -16,30 +16,14 @@ namespace CIS174_TestCoreApp.Controllers
         {
             context = ctx;
         }
-        public ViewResult sportTest(int activeGame = 5, int activeCategory = 3)
+
+        //public ViewResult sportTest(int activeGame = 5, int activeCategory = 3)
+        public ViewResult sportTest(SportsViewModel model)
         {
             var session = new SportCountrySession(HttpContext.Session);
-            session.SetActiveGame(activeGame);
-            session.SetActiveCategory(activeCategory);
+            session.SetActiveGame(model.activeGame);
+            session.SetActiveCategory(model.activeCategory);
 
-
-            /*
-            int? count = session.GetMyCountriesCount();
-            if(count == null)
-            {
-                var cookies = new SportCountryCookies(Request.Cookies);
-                int[] ids = cookies.GetMyTeamsIds();
-
-                List<SportCountry> mycountries = new List<SportCountry>();
-                if(ids.Length > 0)
-                {
-                    mycountries = context.SportCountries.Include(r => r.Game).Include(m => m.SportType)
-                        .Include(t => t.SportType.Category)
-                        .Where(t => ids.Contains(t.CountryId)).ToList();
-                }
-                session.SetMyCountries(mycountries);
-            }
-            */
 
             var cookies = new SportCountryCookies(Request.Cookies);
             int[] ids = cookies.GetMyTeamsIds();
@@ -67,20 +51,25 @@ namespace CIS174_TestCoreApp.Controllers
 
             //var countries = context.SportCountries.Include(c => c.Game).Include(m => m.SportType).Include(t => t.SportType.Category).OrderBy(g => g.Name).ToList();
             IQueryable<SportCountry> query = context.SportCountries;
-            if(activeGame != 5)
+            if(model.activeGame != 5)
             {
                 query = query.Where(
-                    t => t.Game.GameId == activeGame);
+                    t => t.Game.GameId == model.activeGame);
             }
-            if(activeCategory != 3)
+            if(model.activeCategory != 3)
             {
                 query = query.Where(
                     t => t.SportType.Category.CategoryId ==
-                    activeCategory);
+                    model.activeCategory);
             }
             var countries = query.Include(r => r.SportType).Include(m => m.SportType).Include(t => t.SportType.Category).OrderBy(u => u.Name).ToList();
-            return View(countries);
+            model.sportCountry = countries;
+            return View(model);
         }
+
+
+
+
 
         public ViewResult sportDetails(int id, int activeGame, int activeCategory)
         {

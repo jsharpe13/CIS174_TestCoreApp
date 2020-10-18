@@ -1,0 +1,170 @@
+﻿@model List<Ticketing>
+@{
+    ViewData["Title"] = "ticketIndex";
+    string Done(Ticketing task) => task.Done ? "bg-warning" : "";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: "Lato", sans-serif;
+    }
+
+    .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar h2 {
+            color: #818181;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+    .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #111;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+    }
+
+        .openbtn:hover {
+            background-color: #444;
+        }
+
+    #main {
+        transition: margin-left .5s;
+        padding: 16px;
+    }
+</style>
+
+
+
+<div id="mySidebar" class="sidebar">
+    <form asp-controller="Ticketing" , asp-action="ticketFilter" , method="post">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <h2>Point Value</h2>
+        <select name="filter" class="form-control"
+                asp-items="@(new SelectList(ViewBag.PointValues,
+                    "pointValueId", "Name", ViewBag.Filters.pointValueId))">
+            <option value="all">All</option>
+        </select>
+        <h2>Status</h2>
+        <select name="filter" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Statuses,
+                    "StatusId", "Name", ViewBag.Filters.StatusId))">
+            <option value="all">All</option>
+        </select>
+        </br>
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <button asp-controller="Ticketing" asp-action="ticketIndex" asp-route-id=""
+            class="btn btn-primary">Clear</button>
+    </form>
+</div>
+
+
+<div id="main" class="col-sm-10">
+    <button class="openbtn" onclick="openNav()">Sidebar</button>
+    <a asp-controller="Ticketing" asp-action="ticketAdd"><b>Add new Ticket</b></a>
+
+    <table class="table table-bordered table-striped mt-2">
+        <thead>
+            <tr>
+                <th>Sprint Number</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Point Value</th>
+                <th>Status</th>
+                <th class="w-25"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(Ticketing task in Model)
+            {
+                string done = Done(task);
+                <tr>
+                    <td>@task.SprintNumberId</td>
+                    <td>@task.Name</td>
+                    <td>@task.Description</td>
+                    <td>@task.pointValue.Name</td>
+                    <td class="@done">@task.Status.Name</td>
+                    <td>
+                        <form asp-controller="Ticketing" asp-action="ticketEdit" method="post"
+                              asp-route-id="@ViewBag.Filters.FilterString"
+                              class="mr-2">
+
+                              <input type="hidden"
+                                 name="@nameof(Ticketing.SprintNumberId)" value="@task.SprintNumberId" />
+
+
+                              <button type="submit"
+                                 name="@nameof(Ticketing.StatusId)" value="todo"
+                                 class="btn btn-primary btn-sm">To Do
+                              </button>
+
+                              <button type="submit"
+                                      name="@nameof(Ticketing.StatusId)" value="progress"
+                                      class="btn btn-primary btn-sm">In Progress
+                              </button>
+                               
+                              <button type="submit"
+                                      name="@nameof(Ticketing.StatusId)" value="quality"
+                                      class="btn btn-primary btn-sm">Quality
+                              </button>
+
+                              <button type="submit"
+                                      name="@nameof(Ticketing.StatusId)" value="done"
+                                      class="btn btn-primary btn-sm">Done
+                              </button>
+                              
+                              <button type="submit"
+                                      class="btn btn-primary btn-sm">Delete
+                              </button>
+                        
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>

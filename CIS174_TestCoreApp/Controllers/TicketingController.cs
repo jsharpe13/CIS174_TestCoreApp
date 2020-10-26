@@ -58,6 +58,7 @@ namespace CIS174_TestCoreApp.Controllers
             {
                 ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
                 ViewBag.Statuses = context.TicketingStatuses.ToList();
+                ModelState.AddModelError("", "There are errors in the form.");
                 return View(task);
             }
         }

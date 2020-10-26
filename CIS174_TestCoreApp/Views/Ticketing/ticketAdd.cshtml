@@ -2,19 +2,37 @@
 @{
     ViewData["Title"] = "ticketAdd";
 }
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/
+jquery.validate.unobtrusive.min.js"></script>
+</head>
+
+<style>
+    .validation-summary-error ul {
+        list-style: none;
+    }
+</style>
+
 <h2>New Task</h2>
 
-<div asp-validation-summary="All" class="text-danger"></div>
+<div asp-validation-summary="ModelOnly" class="text-danger validation-summary-error"></div>
 
 <form asp-controller="Ticketing" asp-action="ticketAdd" method="post">
     <div class="form-group">
         <label asp-for="Name">Name:</label>
         <input asp-for="Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Description">Description:</label>
         <input asp-for="Description" class="form-control">
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -24,6 +42,7 @@
                           "pointValueId", "Name"))">
             <option value=""></option>
         </select>
+        <span asp-validation-for="pointValueId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -33,9 +52,12 @@
                         "StatusId", "Name"))">
             <option value=""></option>
         </select>
+        <span asp-validation-for="StatusId" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Add</button>
     <a asp-controller="Ticketing" asp-action="ticketIndex" class="btn btn-primary">Cancel</a>
 </form>
+
+
 

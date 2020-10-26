@@ -13,10 +13,12 @@ namespace CIS174_TestCoreApp.Models
 
 
         [Required(ErrorMessage = "Please enter a Name")]
+        [StringLength(30, ErrorMessage ="Name must be 30 characters or less.")]
         public string Name { get; set; }
 
 
         [Required(ErrorMessage = "Please enter a description")]
+        [DescriptionLength(ErrorMessage = "Description must be less than 150 characters")]
         public string Description { get; set; }
 
 

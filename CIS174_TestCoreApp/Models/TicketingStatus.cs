@@ -11,5 +11,7 @@ namespace CIS174_TestCoreApp.Models
         [Key]
         public string StatusId { get; set; }
         public string Name { get; set; }
+
+        public ICollection<Ticketing> Ticketings { get; set; }
     }
 }

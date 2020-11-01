@@ -25,6 +25,10 @@ namespace CIS174_TestCoreApp.Models
         public DbSet<TicketingPointValue> TicketingPointValues { get; set; }
         public DbSet<TicketingStatus> TicketingStatuses { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -300,6 +304,11 @@ namespace CIS174_TestCoreApp.Models
                 new TicketingStatus { StatusId= "quality", Name="Quality Assurance"},
                 new TicketingStatus { StatusId="done", Name="Done"}
             );
+
+            //(TEST ONLY)modelBuilder.Entity<Ticketing>().Property(t => t.StatusId).IsRequired();
+            //(TEST ONLY)modelBuilder.ApplyConfiguration(new TestTicketingConfig());
+            //(TEST ONLY)modelBuilder.Entity<Ticketing>().HasOne(t => t.Status).WithMany(s => s.Ticketings).OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Ticketing>().HasData(
                 new Ticketing 
                 { 

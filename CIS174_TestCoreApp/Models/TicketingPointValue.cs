@@ -12,5 +12,7 @@ namespace CIS174_TestCoreApp.Models
         public string pointValueId { get; set; }
         public string Name { get; set; }
         public int orderNum { get; set; }
+
+        public ICollection<Ticketing> Ticketings { get; set; }
     }
 }

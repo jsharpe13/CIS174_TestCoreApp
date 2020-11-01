@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,8 @@ namespace CIS174_TestCoreApp.Models
 
 
         [Required(ErrorMessage = "Please enter a description")]
-        [DescriptionLength(ErrorMessage = "Description must be less than 150 characters")]
+        //[DescriptionLength(ErrorMessage = "Description must be less than 150 characters")]
+        [StringLength(150, ErrorMessage = "Description must be less than 150 characters")]
         public string Description { get; set; }
 
 

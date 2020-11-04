@@ -33,6 +33,8 @@ namespace CIS174_TestCoreApp.Models
         public string StatusId { get; set; }
         public TicketingStatus Status { get; set; }
 
+        //[Timestamp]
+        //public byte[] RowVersion { get; set; }
         public bool Done =>
             StatusId?.ToLower() == "done";
     }

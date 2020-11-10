@@ -26,6 +26,7 @@ namespace CIS174_TestCoreApp.Controllers
             ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
             ViewBag.Statuses = context.TicketingStatuses.ToList();
 
+            /*
             //IQueryable<Ticketing> query = context.Ticketings;
             var query = dataAccess.queryData();
             if(filters.HasPointValue)
@@ -38,7 +39,18 @@ namespace CIS174_TestCoreApp.Controllers
                 //query = query.Where(t => t.StatusId == filters.StatusId);
                 query = dataAccess.filterTickets(query, t => t.StatusId == filters.StatusId);
             }
-            var tasks = query.Include(t => t.pointValue).Include(t => t.Status).OrderBy(t => t.SprintNumberId).ToList();
+            //var tasks = query.Include(t => t.pointValue).Include(t => t.Status).OrderBy(t => t.SprintNumberId).ToList();
+            var tasks = dataAccess.includeAll(query, t => t.pointValue, t => t.Status, t => t.SprintNumberId);
+            */
+            var tasks = dataAccess.GetTickets(new TicketingQueryOptions<Ticketing>());
+            //{
+            //    Includes = "pointValue Status",
+            //    Where = t => t.pointValueId == filters.pointValueId && c => c.StatusId == filters.StatusId,
+
+            //});
+            var myItems = (from t in tasks
+                          where t.pointValueId == filters.pointValueId && t.StatusId == filters.StatusId
+                          select t);
             return View(tasks);
         }
 

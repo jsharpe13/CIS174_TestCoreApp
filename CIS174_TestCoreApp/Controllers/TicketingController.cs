@@ -11,10 +11,13 @@ namespace CIS174_TestCoreApp.Controllers
     public class TicketingController : Controller
     {
         private StudentContext context { get; set; }
+        private TicketRepository<Ticketing> data { get; set; }
 
         public TicketingController(StudentContext ctx)
         {
             context = ctx;
+            
+            data = new TicketRepository<Ticketing>(ctx);
         }
 
         public IActionResult ticketIndex(string id)
@@ -42,6 +45,9 @@ namespace CIS174_TestCoreApp.Controllers
             //var tasks = query.Include(t => t.pointValue).Include(t => t.Status).OrderBy(t => t.SprintNumberId).ToList();
             var tasks = dataAccess.includeAll(query, t => t.pointValue, t => t.Status, t => t.SprintNumberId);
             */
+
+
+            /* Dad's code
             var tasks = dataAccess.GetTickets(new TicketingQueryOptions<Ticketing>());
             //{
             //    Includes = "pointValue Status",
@@ -51,6 +57,14 @@ namespace CIS174_TestCoreApp.Controllers
             var myItems = (from t in tasks
                           where t.pointValueId == filters.pointValueId && t.StatusId == filters.StatusId
                           select t);
+            */
+
+            var tasks = data.List(new TicketingQueryOptions<Ticketing>
+            {
+                Includes = "pointValue, Status",
+                Where = (t => t.pointValueId == filters.pointValueId && t.StatusId == filters.StatusId)
+            });
+
             return View(tasks);
         }
 

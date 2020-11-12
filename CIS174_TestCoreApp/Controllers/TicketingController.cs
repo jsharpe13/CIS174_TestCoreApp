@@ -33,11 +33,11 @@ namespace CIS174_TestCoreApp.Controllers
             var filters = new TicketingFilters(id);
             ViewBag.Filters = filters;
             // ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
-            var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
-            {
-                OrderBy = t => t.orderNum
-            };
-            ViewBag.PointValues = tpv.List(tpvOptions);
+            //var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
+            //{
+            //    OrderBy = t => t.orderNum
+            //};
+            //ViewBag.PointValues = tpv.List(tpvOptions);
 
             // ViewBag.Statuses = context.TicketingStatuses.ToList();
 

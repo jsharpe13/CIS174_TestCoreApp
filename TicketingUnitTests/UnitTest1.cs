@@ -19,7 +19,7 @@ namespace TicketingUnitTests
             var controller = new TicketingController(rep);
 
             //act
-            var result = controller.ticketIndex("all");
+            var result = controller.ticketIndex("all-all");
 
             //assert
             Assert.IsType<ViewResult>(result);

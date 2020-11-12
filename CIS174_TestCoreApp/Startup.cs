@@ -26,7 +26,7 @@ namespace CIS174_TestCoreApp
         public void ConfigureServices(IServiceCollection services)
         {
             // must be called before AddControllerWithViews()
-            services.AddMemoryCache(); 
+            services.AddMemoryCache();
             services.AddSession(options =>
             {
                 //change idle timeout to 5 minutes - default is 20 minutes
@@ -34,6 +34,9 @@ namespace CIS174_TestCoreApp
                 options.Cookie.HttpOnly = false;     //default is true
                 options.Cookie.IsEssential = true;   //default is false
             });
+
+            services.AddTransient<ITicketingUnitOfWork, TicketingUnitOfWork>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddDbContext<StudentContext>(options => options.UseSqlServer(Configuration.GetConnectionString("StudentContext")));

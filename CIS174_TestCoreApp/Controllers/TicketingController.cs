@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CIS174_TestCoreApp.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,47 +11,40 @@ namespace CIS174_TestCoreApp.Controllers
 {
     public class TicketingController : Controller
     {
-        // private StudentContext context { get; set; }
-        private IRepository<Ticketing> data { get; set; }
 
-        private IRepository<TicketingPointValue> tpv { get; set; }
-        private IRepository<TicketingStatus> ts { get; set; }
+        private ITicketingUnitOfWork _uow;
 
-        public TicketingController(IRepository<Ticketing> rep) => data = rep;
-
-        //public TicketingController(StudentContext ctx)
-        //{
-        //    context = ctx;
-
-        //    data = new TicketingRepository<Ticketing>(ctx);
-        //}
+        public TicketingController(ITicketingUnitOfWork uow)
+        {
+            _uow = uow;
+        }
 
         public IActionResult ticketIndex(string id)
         {
-            // var dataAccess = new TicketingData(context);
-
 
             var filters = new TicketingFilters(id);
             ViewBag.Filters = filters;
-            // ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
-            //var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
-            //{
-            //    OrderBy = t => t.orderNum
-            //};
-            //ViewBag.PointValues = tpv.List(tpvOptions);
 
-            // ViewBag.Statuses = context.TicketingStatuses.ToList();
+            var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
+            {
+                OrderBy = t => t.orderNum
+            };
+            ViewBag.PointValues = _uow.TicketingPointValues.List(tpvOptions);
+
+            var tsOptions = new TicketingQueryOptions<TicketingStatus>
+            {
+                OrderBy = t => t.StatusId
+            };
+            ViewBag.Statuses = _uow.TicketingStatuses.List(tsOptions);
 
 
             if (!filters.HasPointValue && !filters.HasStatus)
             {
-                //var tasks = dataAccess.GetTickets(new TicketingQueryOptions<Ticketing>
                 var tasks = new TicketingQueryOptions<Ticketing>
                 {
                     Includes = "pointValue, Status",
-                    // Where = (t => t.pointValueId == filters.pointValueId && t.StatusId == filters.StatusId)
                 };
-                return View(data.List(tasks));
+                return View(_uow.Ticketings.List(tasks));
             }
             else if (filters.HasPointValue && filters.HasStatus)
             {
@@ -59,7 +53,7 @@ namespace CIS174_TestCoreApp.Controllers
                     Includes = "pointValue, Status",
                     Where = (t => t.pointValueId == filters.pointValueId && t.StatusId == filters.StatusId)
                 };
-                return View(tasks);
+                return View(_uow.Ticketings.List(tasks));
             }
             else if (filters.HasPointValue)
             {
@@ -69,7 +63,7 @@ namespace CIS174_TestCoreApp.Controllers
                     Includes = "pointValue, Status",
                     Where = (t => t.pointValueId == filters.pointValueId)
                 };
-                return View(tasks);
+                return View(_uow.Ticketings.List(tasks));
 
             }
             else
@@ -79,7 +73,7 @@ namespace CIS174_TestCoreApp.Controllers
                     Includes = "pointValue, Status",
                     Where = (t => t.StatusId == filters.StatusId)
                 };
-                return View(tasks);
+                return View(_uow.Ticketings.List(tasks));
             }
 
             // return View(tasks);
@@ -89,8 +83,17 @@ namespace CIS174_TestCoreApp.Controllers
         public IActionResult ticketAdd()
         {
             //todo
-            //ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
-            //ViewBag.Statuses = context.TicketingStatuses.ToList();
+            var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
+            {
+                OrderBy = t => t.orderNum
+            };
+            ViewBag.PointValues = _uow.TicketingPointValues.List(tpvOptions);
+
+            var tsOptions = new TicketingQueryOptions<TicketingStatus>
+            {
+                OrderBy = t => t.StatusId
+            };
+            ViewBag.Statuses = _uow.TicketingStatuses.List(tsOptions);
 
             return View();
         }
@@ -100,17 +103,24 @@ namespace CIS174_TestCoreApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                // context.Ticketings.Add(task);
-                data.Insert(task);
-                // context.SaveChanges();
-                data.Save();
+                _uow.Ticketings.Insert(task);
+                _uow.Ticketings.Save();
                 return RedirectToAction("ticketIndex");
             }
             else
             {
                 // todo
-                //ViewBag.PointValues = context.TicketingPointValues.OrderBy(t => t.orderNum).ToList();
-                //ViewBag.Statuses = context.TicketingStatuses.ToList();
+                var tpvOptions = new TicketingQueryOptions<TicketingPointValue>
+                {
+                    OrderBy = t => t.orderNum
+                };
+                ViewBag.PointValues = _uow.TicketingPointValues.List(tpvOptions);
+
+                var tsOptions = new TicketingQueryOptions<TicketingStatus>
+                {
+                    OrderBy = t => t.StatusId
+                };
+                ViewBag.Statuses = _uow.TicketingStatuses.List(tsOptions);
 
                 ModelState.AddModelError("", "There are errors in the form.");
                 return View(task);
@@ -129,27 +139,22 @@ namespace CIS174_TestCoreApp.Controllers
         {
             if (selected.StatusId == null)
             {
-                //context.Ticketings.Remove(selected);
-                data.Delete(selected);
+                _uow.Ticketings.Delete(selected);
 
-                //context.SaveChanges();
-                data.Save();
+                _uow.Ticketings.Save();
                 return RedirectToAction("ticketIndex", new { ID = id });
             }
             else
             {
                 string newStatusId = selected.StatusId;
-                //selected = context.Ticketings.Find(selected.SprintNumberId);
-                selected = data.Get(selected.SprintNumberId);
+                selected = _uow.Ticketings.Get(selected.SprintNumberId);
                 selected.StatusId = newStatusId;
-                //context.Ticketings.Update(selected);
-                data.Update(selected);
+                _uow.Ticketings.Update(selected);
 
                 ///*
                 try
                 {
-                    //context.SaveChanges();
-                    data.Save();
+                    _uow.Ticketings.Save();
                     return RedirectToAction("ticketIndex", new { ID = id });
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -195,4 +200,3 @@ namespace CIS174_TestCoreApp.Controllers
         }
     }
 }
-

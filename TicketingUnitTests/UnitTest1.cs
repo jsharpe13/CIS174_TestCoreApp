@@ -10,22 +10,6 @@ namespace TicketingUnitTests
 {
     public class UnitTest1
     {
-        /*
-        [Fact]
-        public void Test_index()
-        {
-            //arrange
-            var IUnit = new Mock<ITicketingUnitOfWork>();
-            var controller = new TicketingController(IUnit.Object);
-
-            //act
-            var result = controller.ticketIndex("all-all");
-            
-
-            //assert
-            Assert.IsType<ViewResult>(result);
-        }
-        */
         [Fact]
         public void Test_TicketingPointValue()
         {
@@ -79,79 +63,36 @@ namespace TicketingUnitTests
             Assert.Equal("1", testTickeing.pointValueId);
             Assert.Equal("qa", testTickeing.StatusId);
         }
-        /*
         [Fact]
-        public void Test_edit()
+        public void Test_UOW()
         {
-            //arrange
-            var rep = new Mock<IRepository<Ticketing>>();
-            //var mockContext = new Mock<StudentContext>();
-            var controller = new TicketingController(rep.Object);
+            var mockContext = new Mock<StudentContext>();
+            var unitOfWork = new TicketingUnitOfWork(mockContext.Object);
 
-            //act
-            var result = controller.ticketEdit("all-all", new Ticketing());
+            unitOfWork.Save();
 
-            //assert
-            Assert.IsType<RedirectToActionResult>(result);
+            mockContext.Verify(x => x.SaveChanges());
         }
         [Fact]
-        public void Test_filter()
+        public void Test_TicketingController()
         {
-            //arrange
-            var rep = new Mock<IRepository<Ticketing>>();
-            //var mockContext = new Mock<StudentContext>();
-            var controller = new TicketingController(rep.Object);
+            var mockContext = new Mock<StudentContext>();
+            var unitOfWork = new TicketingUnitOfWork(mockContext.Object);
+            var output = new TicketingController(unitOfWork);
+
+            Assert.NotNull(output.ViewBag);
+        }
+        [Fact]
+        public void Test_TicketingController_filters()
+        {
+            var mockContext = new Mock<StudentContext>();
+            var unitOfWork = new TicketingUnitOfWork(mockContext.Object);
+            var output = new TicketingController(unitOfWork);
             string[] test = { "all", "all" };
 
-            //act
-            var result = controller.ticketFilter(test);
+            var result = output.ticketFilter(test);
 
-            //assert
             Assert.IsType<RedirectToActionResult>(result);
         }
-        [Fact]
-        public void Test_add_view()
-        {
-            //arrange
-            var rep = new Mock<IRepository<Ticketing>>();
-            //var mockContext = new Mock<StudentContext>();
-            var controller = new TicketingController(rep.Object);
-
-            //act
-            var result = controller.ticketAdd();
-
-            //assert
-            Assert.IsType<ViewResult>(result);
-        }
-        [Fact]
-        public void Test_add_post()
-        {
-            //arrange
-            var rep = new Mock<IRepository<Ticketing>>();
-            //var mockContext = new Mock<StudentContext>();
-            var controller = new TicketingController(rep.Object);
-
-            //act
-            var result = controller.ticketAdd(new Ticketing());
-
-            //assert
-            Assert.IsType<RedirectToActionResult>(result);
-        }
-        [Fact]
-        public void Test_add_post_details()
-        {
-            //arrange
-            var rep = new Mock<IRepository<Ticketing>>();
-            //var mockContext = new Mock<StudentContext>();
-            var controller = new TicketingController(rep.Object);
-            var addnew = new Ticketing();
-
-            //act
-            var result = controller.ticketAdd(addnew);
-
-            //assert
-            Assert.IsType<Ticketing>(addnew);
-        }
-        */
     }
 }

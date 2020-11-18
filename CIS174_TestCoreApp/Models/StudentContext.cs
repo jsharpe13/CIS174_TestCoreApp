@@ -12,6 +12,11 @@ namespace CIS174_TestCoreApp.Models
             : base(options)
         { }
 
+        protected StudentContext()
+        {
+
+        }
+
         public DbSet<Student>Students { get; set; }
 
 

@@ -10,11 +10,11 @@ namespace CIS174_TestCoreApp.Controllers
 {
     public class AccountController : Controller
     {
-        private UserManager<Users> userManager;
-        private SignInManager<Users> signInManager;
+        private UserManager<User> userManager;
+        private SignInManager<User> signInManager;
 
-        public AccountController(UserManager<Users> userMngr,
-            SignInManager<Users> signInMngr)
+        public AccountController(UserManager<User> userMngr,
+            SignInManager<User> signInMngr)
         {
             userManager = userMngr;
             signInManager = signInMngr;
@@ -31,9 +31,12 @@ namespace CIS174_TestCoreApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new Users { UserName = model.Username }; var result = await userManager.CreateAsync(user, model.Password); if (result.Succeeded)
+                var user = new User { UserName = model.Username }; 
+                var result = await userManager.CreateAsync(user, model.Password); 
+                if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false); return RedirectToAction("Index", "Home");
+                    await signInManager.SignInAsync(user, isPersistent: false); 
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -56,15 +59,17 @@ namespace CIS174_TestCoreApp.Controllers
         [HttpGet]
         public IActionResult LogIn(string returnURL = "")
         {
-            var model = new LoginViewModel { ReturnUrl = returnURL }; return View(model);
+            var model = new LoginViewModel { ReturnUrl = returnURL }; 
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: model.RememberMe, lockoutOnFailure: false);
+                var result = await signInManager.PasswordSignInAsync(
+                    model.Username, model.Password, isPersistent: model.RememberMe, 
+                    lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -74,7 +79,7 @@ namespace CIS174_TestCoreApp.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-            }
+
             ModelState.AddModelError("", "Invalid username/password."); return View(model);
         }
 

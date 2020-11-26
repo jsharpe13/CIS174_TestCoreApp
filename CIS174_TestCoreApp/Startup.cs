@@ -48,7 +48,7 @@ namespace CIS174_TestCoreApp
                 options.AppendTrailingSlash = true;
             });
 
-            services.AddIdentity<Users, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;

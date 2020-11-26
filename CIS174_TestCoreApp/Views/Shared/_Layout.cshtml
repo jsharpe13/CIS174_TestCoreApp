@@ -40,7 +40,7 @@
                     </li>
 
                     @using Microsoft.AspNetCore.Identity
-                    @inject SignInManager<Users> signInManager
+                    @inject SignInManager<User> signInManager
                     @if (signInManager.IsSignedIn(User))
                     {
                         // signed-in user - Log Out button and username

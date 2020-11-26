@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CIS174_TestCoreApp.Models
 {
-    public class StudentContext : IdentityDbContext<Users>
+    public class StudentContext : IdentityDbContext<User>
     {
         public StudentContext(DbContextOptions<StudentContext> options)
             : base(options)

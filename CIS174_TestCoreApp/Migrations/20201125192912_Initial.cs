@@ -2,7 +2,7 @@
 
 namespace CIS174_TestCoreApp.Migrations
 {
-    public partial class everything : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,9 +10,9 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportCategories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -23,9 +23,9 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportGames",
                 columns: table => new
                 {
-                    GameId = table.Column<int>(nullable: false)
+                    GameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,11 +36,11 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    StudentId = table.Column<int>(nullable: false)
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Grade = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Grade = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,9 +51,9 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "TicketingPointValues",
                 columns: table => new
                 {
-                    pointValueId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    orderNum = table.Column<int>(nullable: false)
+                    pointValueId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    orderNum = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,8 +64,8 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "TicketingStatuses",
                 columns: table => new
                 {
-                    StatusId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,10 +76,10 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportTypes",
                 columns: table => new
                 {
-                    SportTypeId = table.Column<int>(nullable: false)
+                    SportTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    CategoryId = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,27 +96,27 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "Ticketings",
                 columns: table => new
                 {
-                    SprintNumberId = table.Column<int>(nullable: false)
+                    SprintNumberId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    pointValueId = table.Column<string>(nullable: false),
-                    StatusId = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    pointValueId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ticketings", x => x.SprintNumberId);
                     table.ForeignKey(
-                        name: "FK_Ticketings_TicketingStatuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "TicketingStatuses",
-                        principalColumn: "StatusId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Ticketings_TicketingPointValues_pointValueId",
                         column: x => x.pointValueId,
                         principalTable: "TicketingPointValues",
                         principalColumn: "pointValueId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ticketings_TicketingStatuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "TicketingStatuses",
+                        principalColumn: "StatusId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -124,12 +124,12 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportCountries",
                 columns: table => new
                 {
-                    CountryId = table.Column<int>(nullable: false)
+                    CountryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    GameId = table.Column<int>(nullable: false),
-                    SportTypeId = table.Column<int>(nullable: false),
-                    LogoImage = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    SportTypeId = table.Column<int>(type: "int", nullable: false),
+                    LogoImage = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -278,14 +278,14 @@ namespace CIS174_TestCoreApp.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticketings_StatusId",
-                table: "Ticketings",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ticketings_pointValueId",
                 table: "Ticketings",
                 column: "pointValueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticketings_StatusId",
+                table: "Ticketings",
+                column: "StatusId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -306,10 +306,10 @@ namespace CIS174_TestCoreApp.Migrations
                 name: "SportTypes");
 
             migrationBuilder.DropTable(
-                name: "TicketingStatuses");
+                name: "TicketingPointValues");
 
             migrationBuilder.DropTable(
-                name: "TicketingPointValues");
+                name: "TicketingStatuses");
 
             migrationBuilder.DropTable(
                 name: "SportCategories");

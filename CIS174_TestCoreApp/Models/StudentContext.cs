@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CIS174_TestCoreApp.Models
 {
-    public class StudentContext : DbContext
+    public class StudentContext : IdentityDbContext<Users>
     {
         public StudentContext(DbContextOptions<StudentContext> options)
             : base(options)

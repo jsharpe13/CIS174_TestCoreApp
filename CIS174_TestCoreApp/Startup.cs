@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using CIS174_TestCoreApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CIS174_TestCoreApp
 {
@@ -46,6 +47,14 @@ namespace CIS174_TestCoreApp
                 options.LowercaseUrls = true;
                 options.AppendTrailingSlash = true;
             });
+
+            services.AddIdentity<Users, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            }).AddEntityFrameworkStores<StudentContext>()
+                .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +75,7 @@ namespace CIS174_TestCoreApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             //must be called before UseEndpoints()

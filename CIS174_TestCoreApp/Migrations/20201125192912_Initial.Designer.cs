@@ -9,25 +9,26 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CIS174_TestCoreApp.Migrations
 {
     [DbContext(typeof(StudentContext))]
-    [Migration("20201018172253_everything")]
-    partial class everything
+    [Migration("20201125192912_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("CIS174_TestCoreApp.Models.SportCategory", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CategoryId");
@@ -52,15 +53,17 @@ namespace CIS174_TestCoreApp.Migrations
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
                     b.Property<string>("LogoImage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SportTypeId")
@@ -274,9 +277,10 @@ namespace CIS174_TestCoreApp.Migrations
                     b.Property<int>("GameId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GameId");
@@ -311,12 +315,13 @@ namespace CIS174_TestCoreApp.Migrations
                     b.Property<int>("SportTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SportTypeId");
@@ -381,15 +386,18 @@ namespace CIS174_TestCoreApp.Migrations
                     b.Property<int>("StudentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Grade")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
@@ -439,15 +447,17 @@ namespace CIS174_TestCoreApp.Migrations
                     b.Property<int>("SprintNumberId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("StatusId")
                         .IsRequired()
@@ -506,6 +516,7 @@ namespace CIS174_TestCoreApp.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("orderNum")
@@ -566,6 +577,7 @@ namespace CIS174_TestCoreApp.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StatusId");
@@ -608,6 +620,10 @@ namespace CIS174_TestCoreApp.Migrations
                         .HasForeignKey("SportTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("SportType");
                 });
 
             modelBuilder.Entity("CIS174_TestCoreApp.Models.SportType", b =>
@@ -617,21 +633,37 @@ namespace CIS174_TestCoreApp.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("CIS174_TestCoreApp.Models.Ticketing", b =>
                 {
                     b.HasOne("CIS174_TestCoreApp.Models.TicketingStatus", "Status")
-                        .WithMany()
+                        .WithMany("Ticketings")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CIS174_TestCoreApp.Models.TicketingPointValue", "pointValue")
-                        .WithMany()
+                        .WithMany("Ticketings")
                         .HasForeignKey("pointValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("pointValue");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.TicketingPointValue", b =>
+                {
+                    b.Navigation("Ticketings");
+                });
+
+            modelBuilder.Entity("CIS174_TestCoreApp.Models.TicketingStatus", b =>
+                {
+                    b.Navigation("Ticketings");
                 });
 #pragma warning restore 612, 618
         }

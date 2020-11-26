@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CIS174_TestCoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace CIS174_TestCoreApp.Controllers
             _uow = uow;
         }
 
+        [Authorize]
         public IActionResult ticketIndex(string id)
         {
 
@@ -79,6 +81,7 @@ namespace CIS174_TestCoreApp.Controllers
             // return View(tasks);
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult ticketAdd()
         {
